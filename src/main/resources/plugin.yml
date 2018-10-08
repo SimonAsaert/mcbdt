@@ -1,0 +1,173 @@
+name: MCBDuctTape
+main: tld.sima.mcbtp.Main
+version: 0.9.7
+author: Simon A
+description: A plugin that acts as a replacement for essentials for MCB.
+
+commands:
+  spawn:
+    description: Teleports user to spawn
+    usage: /spawn
+    permission: mcdt.spawn
+    permission-message: You don't have the mcdt.spawn permission.
+  setspawn:
+    description: Changes world spawn to location
+    usage: /setspawn
+    permission: mcdt.setspawn
+    permission-message: You don't have the mcdt.spawn permission.
+  delspawn:
+    description: Removes a group's defined spawn to location
+    usage: /delspawn <groupname>
+    permission: mcdt.delspawn
+    permission-message: You don't have the mcdt.delspawn permission.
+  mcbconfirm:
+    description: Confirms user to teleport to location
+    usage: /mcbconfirm
+    permission: mcdt.mcbconfirm
+    permission-message: You don't have the mcdt.mcbconfirm permission.
+  msg:
+    description: Send message to other player
+    usage: /msg <username> <message>
+    permission: mcdt.message
+    permission-message: You don't have the mcdt.message permission.
+  pm:
+    description: Send message to other player
+    usage: /pm <username> <message>
+    permission: mcdt.message
+    permission-message: You don't have the mcdt.message permission.
+  tell:
+    description: Send message to other player
+    usage: /tell <username> <message>
+    permission: mcdt.message
+    permission-message: You don't have the mcdt.message permission.
+  r:
+    description: Responds back to other user message
+    usage: /r <message>
+    permission: mcdt.reply
+    permission-message: You don't have the mcdt.reply permission.
+  homes:
+    description: List users homes
+    usage: /homes
+    permission: mcdt.homes
+    permission-message: You don't have the mcdt.homes permission.
+  sethome:
+    description: Add home to user.
+    usage: /sethome <name>
+    permission: mcdt.sethome
+    permission-message: You don't have the mcdt.sethome permission.
+  home:
+    description: Teleport to home
+    usage: /home <name>
+    permission: mcdt.home
+    permission-message: You don't have the mcdt.home permission.
+  delhome:
+    description: Delete home
+    usage: /delhome <name>
+    permission: mcdt.delhome
+    permission-message: You don't have the mcdt.delhome permission.
+  a:
+    description: Talk in admin chat
+    usage: /a <message>
+    permission: mcdt.adminchat
+    permission-message: You don't have the mcdt.adminchat permission.
+  ac:
+    description: Talk in admin chat
+    usage: /ac <message>
+    permission: mcdt.adminchat
+    permission-message: You don't have the mcdt.adminchat permission.
+  amute:
+    description: Mute/Unmute admin chat
+    usage: /amute
+    permission: mcdt.amute
+    permission-message: You don't have the mcdt.amute permission.
+  invsee:
+    description: See user's inventory
+    usage: /invsee <Player>
+    permission: mcdt.invsee
+    permission-message: You don't have the mcdt.invsee permission.
+  endersee:
+    description: See user's enderchest inventory
+    usage: /endersee <player>
+    permission: mcdt.endersee
+    permission-message: You don't have the mcdt.endersee permission.
+  tppos:
+    description: Teleport to location
+    usage: /tppos <x> <y> <z>
+    permission: mcdt.tppos
+    permission-message: You don't have the mcdt.tppos permission.
+  getpos:
+    description: See user's current location
+    usage: /getpos <player>
+    permission: mcdt.getpos
+    permission-message: You don't have the mcdt.getpos permission.
+  kill:
+    description: Kills defined user
+    usage: /kill <username>
+    permission: mcdt.kill
+    permission-message: You don't have the mcdt.kill permission.
+  fly:
+    description: Toggles flight for defined user
+    usage: /fly <username>
+    permission: mcdt.fly
+    permission-message: You don't have the mcdt.fly permission.
+  feed:
+    description: Feeds defined user
+    usage: /feed <username>
+    permission: mcdt.feed
+    permission-message: You don't have the mcdt.feed permission.
+  heal:
+    description: Heals defined user
+    usage: /heal <username>
+    permission: mcdt.heal
+    permission-message: You don't have the mcdt.heal permission.
+  god:
+    description: Toggles godmode for defined user
+    usage: /god <username>
+    permission: mcdt.god
+    permission-message: You don't have the mcdt.god permission.
+  tpa:
+    description: Teleport request
+    usage: /tpa <username>
+    permission: mcdt.tpa
+    permission-message: You don't have the mcdt.tpa permission.
+  tpaccept:
+    description: Accept tpa request
+    usage: /tpaccept
+    permission: mcdt.tpaccept
+    permission-message: You don't have the mcdt.accept permission.
+  tpdeny:
+    description: Deny tpa request
+    usage: /tpdeny
+    permission: mcdt.tpdeny
+    permission-message: You don't have the mcdt.tpdeny permission.
+  pvp:
+    description: Toggle pvp request
+    usage: /pvp
+    permission: mcdt.pvp
+    permission-message: You don't have the mcdt.pvp permission.
+    
+permissions:
+  modifyworld:
+    description: Allows user to see break blocks
+    permission: modifyworld
+    permission-message: You don't have the modifyworld permission.
+  otherhomes:
+    description: Allows user to see other people's homes
+    permission: mcdt.homes.others
+    permission-message: You don't have the mcdt.homes.others permission.
+  otherhome:
+    description: Allows user to go to other people's homes
+    permission: mcdt.home.others
+    permission-message: You don't have the mcdt.home.others permission.
+  setotherhome:
+    description: Allows user to set other people's homes
+    permission: mcdt.sethome.others
+    permission-message: You don't have the mcdt.sethome.others permission.
+  delotherhome:
+    description: Allows user to go delete other people's homes
+    permission: mcdt.delhome.others
+    permission-message: You don't have the mcdt.delhome.others permission.
+  homenumb:
+    description: Set number of homes users can have (Default 3)
+    permission: mcdt.homenumb.*
+ 
