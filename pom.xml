@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>tld.sima.mcbtp</groupId>
   <artifactId>mcbdt</artifactId>
-  <version>0.9.7-SNAPSHOT</version>
+  <version>0.9.9-SNAPSHOT</version>
   
   <name>MCBTP</name>
   <description>Essentials replacement for MCB</description>

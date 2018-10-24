@@ -29,15 +29,14 @@ public class PlayerStorageManager {
 	
 	// Main Config setup
 	public void setup(Player player) {
-		
+		setup(player.getUniqueId());
+	}
+	
+	public void setup(UUID uuid) {
 		// Create plugin folder if doesn't exist.
 		if(!plugin.getDataFolder().exists()) {
 			plugin.getDataFolder().mkdir();
 		}
-		this.uuid = player.getUniqueId();
-		
-		// Create storage folder if doesn't exist
-		UUID uuid = player.getUniqueId();
 		
 		String FileLocation = plugin.getDataFolder().toString() + File.separator + "Storage";
 		
@@ -82,6 +81,10 @@ public class PlayerStorageManager {
 			return false;
 		}
 		return true;
+	}
+	
+	public File getFile() {
+		return storagefile;
 	}
 	
 	public void finalSave(HashMap<String, Location> locMap) {
