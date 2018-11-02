@@ -49,15 +49,10 @@ public class EventManager implements Listener {
 	@EventHandler
 	public void onPVP(EntityDamageByEntityEvent event) {
 		if ((event.getDamager() instanceof Player) && (event.getEntity() instanceof Player)) {
-			if (plugin.getPVPSet().contains(event.getEntity().getUniqueId())) {
+			Player damager = (Player) event.getDamager();
+			Player damagee = (Player) event.getEntity();
+			if(plugin.getPVPSet().contains(damager.getUniqueId()) || plugin.getPVPSet().contains(damagee.getUniqueId())) {
 				event.setCancelled(true);
-				Player player = (Player) event.getEntity();
-				Player damager = (Player) event.getDamager();
-				damager.sendMessage(ChatColor.WHITE + player.getName() + ChatColor.GOLD + "'s pvp is disabled!");
-			}else if (plugin.getPVPSet().contains(event.getDamager().getUniqueId())){
-				event.setCancelled(true);
-				Player damager = (Player) event.getDamager();
-				damager.sendMessage(ChatColor.RED + "Your pvp is disabled!");
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 name: MCBDuctTape
 main: tld.sima.mcbtp.Main
-version: 0.9.8
+version: 0.10.1
 author: Simon A
 description: A plugin that acts as a replacement for essentials for MCB.
 
@@ -95,6 +95,11 @@ commands:
     usage: /tppos <x> <y> <z>
     permission: mcdt.tppos
     permission-message: You don't have the mcdt.tppos permission.
+  tpall:
+    description: Teleports ALL players to player
+    usage: /tpall
+    permission: mcdt.tpall
+    permission-message: You don't have the mcdt.tpall permission
   getpos:
     description: See user's current location
     usage: /getpos <player>

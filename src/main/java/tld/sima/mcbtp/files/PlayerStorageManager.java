@@ -87,6 +87,15 @@ public class PlayerStorageManager {
 		return storagefile;
 	}
 	
+	public void savePVPflag(boolean pvp) {
+		storagecfg.set("settings.pvp", pvp);
+		savecfg();
+	}
+	
+	public boolean getPVPflag() {
+		return storagecfg.getBoolean("settings.pvp");
+	}
+	
 	public void finalSave(HashMap<String, Location> locMap) {
 		// Get and duplicate new HomeName list
 		List<String> newList = new ArrayList<String>(locMap.keySet());

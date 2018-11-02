@@ -23,6 +23,7 @@ public class TeleportCmds implements CommandExecutor {
 	public String cmd3 = "tpa";
 	public String cmd4 = "tpaccept";
 	public String cmd5 = "tpdeny";
+	public String cmd6 = "tpall";
 	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -161,6 +162,18 @@ public class TeleportCmds implements CommandExecutor {
 					player.sendMessage(ChatColor.RED + "No teleport requests found!");
 				}
 				return true;
+			}else if (command.getName().equalsIgnoreCase(cmd6)){
+				Player player = (Player) sender;
+				if (player.hasPermission("mcbdt.tpall")) {
+					for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
+						if (otherPlayer.getUniqueId() != player.getUniqueId()) {
+							otherPlayer.sendMessage(ChatColor.GOLD + "You have been summoned to " + ChatColor.WHITE + player.getDisplayName());
+							otherPlayer.teleport(player);
+						}
+					}
+				}else {
+					player.sendMessage("You do not have mcbdt.tpall permission");
+				}
 			}
 		}else {
 			Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "You have to be a player to use that command!");

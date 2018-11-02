@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -72,6 +73,7 @@ public class Main extends JavaPlugin {
 		this.getCommand(tpcmd.cmd3).setExecutor(tpcmd);
 		this.getCommand(tpcmd.cmd4).setExecutor(tpcmd);
 		this.getCommand(tpcmd.cmd5).setExecutor(tpcmd);
+		this.getCommand(tpcmd.cmd6).setExecutor(tpcmd);
 		
 		PlayerCmds playercmd = new PlayerCmds();
 		this.getCommand(playercmd.cmd1).setExecutor(playercmd);
@@ -105,6 +107,7 @@ public class Main extends JavaPlugin {
 			if (player.hasPermission("mcdt.adminchat") || player.isOp()) {
 				this.getAdminChatMap().add(player.getUniqueId());
 			}
+			player.getStatistic(Statistic.PLAY_ONE_TICK);
 		}
 		
 		this.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "MCBDT Enabled");
@@ -117,6 +120,7 @@ public class Main extends JavaPlugin {
 			PlayerStorageManager smgr = new PlayerStorageManager();
 			smgr.setup(player);
 			smgr.finalSave(homeMap.get(player.getUniqueId()));
+			smgr.savePVPflag(pvpflag.contains(player.getUniqueId()));
 		}
 		tpaRequest.clear();
 		locBackUUID.clear();
@@ -138,6 +142,9 @@ public class Main extends JavaPlugin {
 			smgr.setup(player);
 			HashMap<String, Location> locMap = smgr.getMap();
 			this.homeMap.put(player.getUniqueId(), locMap);
+			if(smgr.getPVPflag()) {
+				pvpflag.add(player.getUniqueId());
+			}
 		}
 	}
 	
