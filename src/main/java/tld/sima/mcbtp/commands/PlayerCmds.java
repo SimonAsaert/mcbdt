@@ -143,7 +143,7 @@ public class PlayerCmds implements CommandExecutor{
 			// pvp
 			}else if (command.getName().equalsIgnoreCase(cmd6)) {
 				final Player player = (Player) sender;
-				if ((args.length == 1) && (player.hasPermission("mcdt.kill.others"))) {
+				if ((args.length == 1) && (player.hasPermission("mcdt.pvp.others"))) {
 					Player otherPlayer = Bukkit.getPlayer(args[0]);
 					if (otherPlayer == null) {
 						player.sendMessage("Player name not found!");
@@ -159,23 +159,12 @@ public class PlayerCmds implements CommandExecutor{
 					}
 				}else if (args.length == 0) {
 					final UUID uuid = player.getUniqueId();
-					if (plugin.getPVPSet().contains(uuid) && !plugin.pvptask.containsKey(uuid)) {
-						BukkitTask br = new BukkitRunnable() {
-							public void run() {
-								plugin.getPVPSet().remove(uuid);
-								player.sendMessage(ChatColor.GOLD + "Your pvp is " + ChatColor.RED + "disabled" + ChatColor.GOLD + "!");
-							}
-						}.runTaskLater(plugin, (20*10L));
-						plugin.pvptask.put(uuid, br);
-						player.sendMessage(ChatColor.GOLD + "Your pvp will be disabled in " + ChatColor.WHITE + "20" + ChatColor.GOLD + " seconds!");
-						
+					if (plugin.getPVPSet().contains(uuid)) {
+						plugin.getPVPSet().remove(uuid);
+						player.sendMessage(ChatColor.GOLD + "Your pvp is " + ChatColor.RED + "disabled" + ChatColor.GOLD + "!");
 					}else if(!plugin.getPVPSet().contains(uuid)) {
 						plugin.getPVPSet().add(uuid);
 						player.sendMessage(ChatColor.GOLD + "Your pvp is " + ChatColor.GREEN + "enabled" + ChatColor.GOLD + "!");
-					}else if (plugin.pvptask.containsKey(uuid)) {
-						player.sendMessage(ChatColor.GOLD + "Pvp toggle has been cancelled!");
-						plugin.pvptask.get(uuid).cancel();
-						plugin.pvptask.remove(uuid);
 					}
 				}else {
 					player.sendMessage(ChatColor.WHITE + "Toggles player's pvp");
