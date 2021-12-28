@@ -16,6 +16,7 @@ public class InventoryCmds implements CommandExecutor {
 
 	public String cmd1 = "invsee";
 	public String cmd2 = "endersee";
+	public String cmd3 = "oi";
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
@@ -28,32 +29,32 @@ public class InventoryCmds implements CommandExecutor {
 						return false;
 					}
 					Inventory other = otherPlayer.getInventory();
-					Inventory i = plugin.getServer().createInventory(null, 45, ChatColor.DARK_BLUE + "Inventory of " + ChatColor.WHITE + otherPlayer.getName());
-					for (int j = 0 ; j < 36 ; j++) {
-						i.setItem(j, other.getItem(j));
-					}
+					other.setMaxStackSize(45);
+					
+//					Inventory i = plugin.getServer().createInventory(null, 45, ChatColor.DARK_BLUE + "Inventory of " + ChatColor.WHITE + otherPlayer.getName());
+//					for (int j = 0 ; j < 36 ; j++) {
+//						i.setItem(j, other.getItem(j));
+//					}
+					
 					if (!(player.getEquipment().getHelmet() == null)) {
-						i.setItem(36, otherPlayer.getEquipment().getHelmet());
+						other.setItem(36, otherPlayer.getEquipment().getHelmet().clone());
 					}
 					if (!(player.getEquipment().getChestplate() == null)) {
-						i.setItem(37, otherPlayer.getEquipment().getChestplate());
+						other.setItem(37, otherPlayer.getEquipment().getChestplate().clone());
 					}
 					if (!(player.getEquipment().getLeggings() == null)) {
-						i.setItem(38, otherPlayer.getEquipment().getLeggings());
+						other.setItem(38, otherPlayer.getEquipment().getLeggings().clone());
 					}
 					if (!(player.getEquipment().getBoots() == null)) {
-						i.setItem(39, otherPlayer.getEquipment().getBoots());
+						other.setItem(39, otherPlayer.getEquipment().getBoots().clone());
 					}
-					if (!(player.getEquipment().getItemInOffHand() == null)) {
-						i.setItem(40, otherPlayer.getEquipment().getItemInOffHand());
-					}
-					player.openInventory(i);
+					player.openInventory(other);
 				}else {
 					player.sendMessage(ChatColor.WHITE + "Opens the inventory of another user (Does not allow to interact!)");
 					return false;
 				}
 				return true;
-			}else if (command.getName().equalsIgnoreCase(cmd2)) {
+			}else if (command.getName().equalsIgnoreCase(cmd2) || command.getName().equalsIgnoreCase(cmd3)) {
 				Player player = (Player) sender;
 				if (args.length == 1) {
 					Player otherPlayer = Bukkit.getPlayer(args[0]);

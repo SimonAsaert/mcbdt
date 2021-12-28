@@ -28,11 +28,19 @@ public class PlayerStorageManager {
 	UUID uuid;
 	
 	// Main Config setup
-	public void setup(Player player) {
+	public PlayerStorageManager(Player player){
+		setup(player);
+	}
+
+	public PlayerStorageManager(UUID uuid){
+		setup(uuid);
+	}
+
+	private void setup(Player player) {
 		setup(player.getUniqueId());
 	}
 	
-	public void setup(UUID uuid) {
+	private void setup(UUID uuid) {
 		// Create plugin folder if doesn't exist.
 		if(!plugin.getDataFolder().exists()) {
 			plugin.getDataFolder().mkdir();
@@ -69,6 +77,8 @@ public class PlayerStorageManager {
 	private void createStorageValues() {
 		storagecfg.addDefault("homes.names", new ArrayList<String>());
 		storagecfg.addDefault("settings.pvp", true);
+		storagecfg.addDefault("settings.loginmsg", "");
+		storagecfg.addDefault("settings.logoutmsg", "");
 		storagecfg.options().copyDefaults(true);
 		savecfg();
 	}
@@ -90,6 +100,24 @@ public class PlayerStorageManager {
 	public void savePVPflag(boolean pvp) {
 		storagecfg.set("settings.pvp", pvp);
 		savecfg();
+	}
+
+	public void setLoginMsg(String message){
+		storagecfg.set("settings.loginmsg", message);
+		savecfg();
+	}
+
+	public void setLogoutMsg(String message){
+		storagecfg.set("settings.logoutmsg", message);
+		savecfg();
+	}
+
+	public String getLoginMsg(Player player){
+		return storagecfg.getString("settings.loginmsg").replaceAll("\\{username}", player.getName());
+	}
+
+	public String getLogoutMsg(Player player){
+		return storagecfg.getString("settings.logoutmsg").replaceAll("\\{username}", player.getName());
 	}
 	
 	public boolean getPVPflag() {

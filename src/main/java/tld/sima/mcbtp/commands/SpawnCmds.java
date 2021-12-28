@@ -1,5 +1,6 @@
 package tld.sima.mcbtp.commands;
 
+import net.luckperms.api.model.group.Group;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,23 +18,23 @@ public class SpawnCmds implements CommandExecutor {
 	
 	Main plugin = Main.getPlugin(Main.class);
 	
-	public String cmd1 = "spawn";
-	public String cmd2 = "setspawn";
-	public String cmd3 = "mcbconfirm";
-	public String cmd4 = "delspawn";
+	public String spawnCmd = "spawn";
+	public String setSpawnCmd = "setspawn";
+	public String mcbConfirmCmd = "mcbconfirm";
+	public String delSpawnCmd = "delspawn";
 	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
-			if (command.getName().equalsIgnoreCase(cmd1)) {
+			if (command.getName().equalsIgnoreCase(spawnCmd)) {
 				final Player player = (Player) sender;
 				
 				Location spawn;
 				if (plugin.api == null) {
 					spawn = player.getLocation().getWorld().getSpawnLocation().clone();
 				}else {
-					if (plugin.getSpawnMap().containsKey(plugin.api.getUser(player.getUniqueId()).getPrimaryGroup().toLowerCase())) {
-						spawn = plugin.getSpawnMap().get(plugin.api.getUser(player.getUniqueId()).getPrimaryGroup().toLowerCase());
+					if (plugin.getSpawnMap().containsKey(plugin.api.getUserManager().getUser(player.getUniqueId()).getPrimaryGroup().toLowerCase())) {
+						spawn = plugin.getSpawnMap().get(plugin.api.getUserManager().getUser(player.getUniqueId()).getPrimaryGroup().toLowerCase());
 					}else {
 						spawn = plugin.getSpawnMap().get("default");
 					}
@@ -54,7 +55,7 @@ public class SpawnCmds implements CommandExecutor {
 					}
 				}
 				if (!flag) {
-					player.sendMessage(ChatColor.RED + "Spawn location is dangerous. Type " + ChatColor.WHITE + "/" + cmd3 + ChatColor.RED + " within " + ChatColor.WHITE + "10" + ChatColor.RED + "seconds if you still want to go to spawn");
+					player.sendMessage(ChatColor.RED + "Spawn location is dangerous. Type " + ChatColor.WHITE + "/" + mcbConfirmCmd + ChatColor.RED + " within " + ChatColor.WHITE + "10" + ChatColor.RED + "seconds if you still want to go to spawn");
 					plugin.getTempMap().put(player.getUniqueId(),spawn);
 					BukkitScheduler scheduler = Bukkit.getScheduler();
 					scheduler.scheduleAsyncDelayedTask(plugin, new Runnable() {
@@ -68,10 +69,11 @@ public class SpawnCmds implements CommandExecutor {
 					player.teleport(spawn);
 				}
 				return true;
-			}else if(command.getName().equalsIgnoreCase(cmd2)) {
+			}else if(command.getName().equalsIgnoreCase(setSpawnCmd)) {
 				Player player = (Player) sender;
 				if (args.length == 1 && plugin.api != null) {
-					if (!plugin.api.isGroupLoaded(args[0])) {
+					Group group = plugin.api.getGroupManager().getGroup(args[0]);
+					if (group == null) {
 						player.sendMessage(ChatColor.RED + "Group doesn't exist!");
 						return false;
 					}
@@ -85,10 +87,12 @@ public class SpawnCmds implements CommandExecutor {
 					return false;
 				}else {
 					player.sendMessage(ChatColor.GOLD + "Setting " + ChatColor.WHITE + player.getLocation().getWorld().getName() + ChatColor.GOLD + " spawn to current location");
-					Bukkit.getServer().getWorld(player.getLocation().getWorld().getUID()).setSpawnLocation(player.getLocation());
+//					Bukkit.getServer().getWorld(player.getLocation().getWorld().getUID()).setSpawnLocation(player.getLocation());
+					Location loc = player.getLocation();
+					player.getLocation().getWorld().setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getYaw());
 				}
 				return true;
-			}else if(command.getName().equalsIgnoreCase(cmd3)) {
+			}else if(command.getName().equalsIgnoreCase(mcbConfirmCmd)) {
 				Player player = (Player) sender;
 				if (plugin.getTempMap().containsKey(player.getUniqueId())) {
 					plugin.getBackMap().put(player.getUniqueId(), player.getLocation());
@@ -96,10 +100,11 @@ public class SpawnCmds implements CommandExecutor {
 					player.teleport(plugin.getTempMap().get(player.getUniqueId()));
 				}
 				return true;
-			}else if (command.getName().equalsIgnoreCase(cmd4)) {
+			}else if (command.getName().equalsIgnoreCase(delSpawnCmd)) {
 				Player player = (Player) sender;
 				if (args.length == 1 && plugin.api != null) {
-					if (plugin.api.isGroupLoaded(args[0])) {
+					Group group = plugin.api.getGroupManager().getGroup(args[0]);
+					if (group != null) {
 						if(plugin.getSpawnMap().containsKey(args[0].toLowerCase())) {
 						plugin.getSpawnMap().remove(args[0].toLowerCase());
 						player.sendMessage(ChatColor.WHITE + args[0].toLowerCase() + ChatColor.GOLD + "'s defined spawn location removed!");

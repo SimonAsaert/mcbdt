@@ -16,19 +16,19 @@ import tld.sima.mcbtp.Main;
 
 public class TeleportCmds implements CommandExecutor {
 
-	private Main plugin = Main.getPlugin(Main.class);
+	private final Main plugin = Main.getPlugin(Main.class);
 	
-	public String cmd1 = "tppos";
-	public String cmd2 = "getpos";
-	public String cmd3 = "tpa";
-	public String cmd4 = "tpaccept";
-	public String cmd5 = "tpdeny";
-	public String cmd6 = "tpall";
+	public String tppos = "tppos";
+	public String getpos = "getpos";
+	public String tpa = "tpa";
+	public String tpaccept = "tpaccept";
+	public String tpdeny = "tpdeny";
+	public String tpall = "tpall";
 	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
-			if (command.getName().equalsIgnoreCase(cmd1)) {
+			if (command.getName().equalsIgnoreCase(tppos)) {
 				final Player player = (Player) sender;
 				if (args.length == 3) {
 					Double[] xyz = new Double[3];
@@ -71,8 +71,7 @@ public class TeleportCmds implements CommandExecutor {
 						player.teleport(loc);
 					}
 				}
-				return true;
-			}else if (command.getName().equalsIgnoreCase(cmd2)) {
+			}else if (command.getName().equalsIgnoreCase(getpos)) {
 				Player player = (Player) sender;
 				if (args.length == 1) {
 					Player otherPlayer = Bukkit.getPlayer(args[0]);
@@ -86,9 +85,8 @@ public class TeleportCmds implements CommandExecutor {
 					player.sendMessage(ChatColor.WHITE + "Gets location of player another player");
 					player.sendMessage(ChatColor.WHITE + "/getpos <Player>");
 				}
-				return true;
 				// tpa
-			}else if (command.getName().equalsIgnoreCase(cmd3)) {
+			}else if (command.getName().equalsIgnoreCase(tpa)) {
 				final Player player = (Player) sender;
 				if (args.length == 1) {
 					final Player otherPlayer = Bukkit.getPlayer(args[0]);
@@ -118,9 +116,8 @@ public class TeleportCmds implements CommandExecutor {
 					player.sendMessage(ChatColor.WHITE + "Request a teleport to a user");
 					return false;
 				}
-				return true;
 				//tpaccept
-			}else if (command.getName().equalsIgnoreCase(cmd4)) {
+			}else if (command.getName().equalsIgnoreCase(tpaccept)) {
 				Player player = (Player) sender;
 				if (plugin.getTpaMap().containsKey(player.getUniqueId())) {
 					final Player otherPlayer = Bukkit.getPlayer(plugin.getTpaMap().get(player.getUniqueId()));
@@ -144,11 +141,10 @@ public class TeleportCmds implements CommandExecutor {
 				}else {
 					player.sendMessage(ChatColor.RED + "No teleport requests found!");
 				}
-				return true;
 				//tpdeny
-			}else if (command.getName().equalsIgnoreCase(cmd5)) {
+			}else if (command.getName().equalsIgnoreCase(tpdeny)) {
 				Player player = (Player) sender;
-				if (plugin.getTpaMap().containsValue(player.getUniqueId())) {
+				if (plugin.getTpaMap().containsKey(player.getUniqueId())) {
 					Player otherPlayer = Bukkit.getPlayer(plugin.getTpaMap().get(player.getUniqueId()));
 					if (otherPlayer == null) {
 						player.sendMessage(ChatColor.RED + "Something went wrong. Other player not found!");
@@ -161,8 +157,7 @@ public class TeleportCmds implements CommandExecutor {
 				}else {
 					player.sendMessage(ChatColor.RED + "No teleport requests found!");
 				}
-				return true;
-			}else if (command.getName().equalsIgnoreCase(cmd6)){
+			}else if (command.getName().equalsIgnoreCase(tpall)){
 				Player player = (Player) sender;
 				if (player.hasPermission("mcbdt.tpall")) {
 					for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
@@ -178,6 +173,6 @@ public class TeleportCmds implements CommandExecutor {
 		}else {
 			Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "You have to be a player to use that command!");
 		}
-		return false;
+		return true;
 	}
 }

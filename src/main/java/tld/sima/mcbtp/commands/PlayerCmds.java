@@ -7,8 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import net.md_5.bungee.api.ChatColor;
 import tld.sima.mcbtp.Main;
@@ -20,7 +18,7 @@ public class PlayerCmds implements CommandExecutor{
 	public String cmd1 = "heal";
 	public String cmd2 = "feed";
 	public String cmd3 = "god";
-	public String cmd4 = "fly";
+	public String cmd4 = "mcbfly";
 	public String cmd5 = "kill";
 	public String cmd6 = "pvp";
 	
@@ -143,7 +141,7 @@ public class PlayerCmds implements CommandExecutor{
 			// pvp
 			}else if (command.getName().equalsIgnoreCase(cmd6)) {
 				final Player player = (Player) sender;
-				if ((args.length == 1) && (player.hasPermission("mcdt.pvp.others"))) {
+				if ((args.length > 0) && (player.hasPermission("mcdt.pvp.others"))) {
 					Player otherPlayer = Bukkit.getPlayer(args[0]);
 					if (otherPlayer == null) {
 						player.sendMessage("Player name not found!");

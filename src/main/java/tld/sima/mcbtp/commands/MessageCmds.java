@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import tld.sima.mcbtp.Main;
+import tld.sima.mcbtp.files.PlayerStorageManager;
 
 public class MessageCmds implements CommandExecutor{
 	
@@ -24,10 +26,40 @@ public class MessageCmds implements CommandExecutor{
 	public String cmd5 = "pm";
 	public String cmd6 = "tell";
 	public String cmd7 = "a";
-	private HashMap<UUID, UUID> playerMap = new HashMap<UUID, UUID>();
+	public String setJoinMsg = "setjoinmsg";
+	public String setLeaveMsg = "setleavemsg";
+	private final HashMap<UUID, UUID> playerMap = new HashMap<UUID, UUID>();
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (sender instanceof Player) {
+		if(command.getName().equalsIgnoreCase(setJoinMsg) || command.getName().equalsIgnoreCase(setLeaveMsg)){
+			if(args.length == 0){
+				return false;
+			}else{
+				OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(args[0]);
+				if(!offlinePlayer.hasPlayedBefore()){
+					sender.sendMessage(ChatColor.RED + "Unable to find player");
+					return true;
+				}
+				PlayerStorageManager playerStorageManager = new PlayerStorageManager(offlinePlayer.getUniqueId());
+				plugin.getServer().getConsoleSender().sendMessage(args);
+				StringBuilder builder = new StringBuilder();
+				builder.append(args.length > 1 ? args[1]: "");
+
+				for (int i = 2 ; i < args.length ; i++){
+					builder.append(" ").append(args[i]);
+				}
+				if(command.getName().equalsIgnoreCase(setJoinMsg)) {
+					playerStorageManager.setLoginMsg(builder.toString());
+					sender.sendMessage(ChatColor.GRAY + "Join Message for user " + ChatColor.WHITE + offlinePlayer.getName() + ChatColor.GRAY + " is now set to:");
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', playerStorageManager.getLoginMsg((Player) offlinePlayer)));
+				}else{
+					playerStorageManager.setLogoutMsg(builder.toString());
+					sender.sendMessage(ChatColor.GRAY + "Leave Message for user " + ChatColor.WHITE + offlinePlayer.getName() + ChatColor.GRAY + " is now set to:");
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', playerStorageManager.getLogoutMsg((Player) offlinePlayer)));
+				}
+			}
+			return true;
+		}else if (sender instanceof Player) {
 			if (command.getName().equalsIgnoreCase(cmd1) || command.getName().equalsIgnoreCase(cmd5) || command.getName().equalsIgnoreCase(cmd6) ) {
 				Player player = (Player) sender;
 

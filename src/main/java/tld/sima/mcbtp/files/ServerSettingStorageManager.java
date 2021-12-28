@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
+
+import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.group.GroupManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,7 +17,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import me.lucko.luckperms.api.Group;
+import org.bukkit.entity.Player;
 import tld.sima.mcbtp.Main;
 
 public class ServerSettingStorageManager {
@@ -53,6 +55,10 @@ public class ServerSettingStorageManager {
 	}
 
 	private void createStorageValues() {
+		storagecfg.addDefault("server.defaultLogin", "&7Welcome &f{username}&7 to the server!");
+		storagecfg.addDefault("server.defaultLogout", "&7Goodbye &f{username}&7! See you soon!");
+		storagecfg.addDefault("server.loginPrefix", " &f[&a+&f]");
+		storagecfg.addDefault("server.logoutPrefix", "&f[&c-&f]");
 		storagecfg.addDefault("group.list", new ArrayList<String>());
 		storagecfg.options().copyDefaults(true);
 		savecfg();
@@ -67,9 +73,41 @@ public class ServerSettingStorageManager {
 		}
 		return true;
 	}
-	
+
+	public void setDefaultLoginMsg(String message){
+		storagecfg.set("server.defaultLogin", message);
+	}
+
+	public void setDefaultLogoutMsg(String message){
+		storagecfg.set("server.defaultLogout", message);
+	}
+
+	public void setLoginPrefixMsg(String message){
+		storagecfg.set("server.loginPrefix", message);
+	}
+
+	public void setLogoutPrefixMsg(String message){
+		storagecfg.set("server.logoutPrefix", message);
+	}
+
+	public String getDefaultLoginMsg(){
+		return storagecfg.getString("server.defaultLogin");
+	}
+
+	public String getDefaultLogoutMsg(){
+		return storagecfg.getString("server.defaultLogout");
+	}
+
+	public String getLoginPrefixMsg(){
+		return storagecfg.getString("server.loginPrefix");
+	}
+
+	public String getLogoutPrefixMsg(){
+		return storagecfg.getString("server.logoutPrefix");
+	}
+
 	public void putNewLocation(String name, Location loc) {
-		if ((loc == null) || (name == null) || (name == "")) {
+		if (loc == null || name == null || name.isEmpty()) {
 			return;
 		}
 		List<String> oldList = storagecfg.getStringList("group.list");
@@ -80,6 +118,8 @@ public class ServerSettingStorageManager {
 		storagecfg.set(name + ".x", loc.getX());
 		storagecfg.set(name + ".y", loc.getY());
 		storagecfg.set(name + ".z", loc.getZ());
+		storagecfg.set(name + ".yaw", loc.getYaw());
+		storagecfg.set(name + ".pitch", loc.getPitch());
 		storagecfg.set(name + ".world", loc.getWorld().getUID().toString());
 		
 		savecfg();
@@ -89,6 +129,9 @@ public class ServerSettingStorageManager {
 		storagecfg.set(name + ".x", loc.getX());
 		storagecfg.set(name + ".y", loc.getY());
 		storagecfg.set(name + ".z", loc.getZ());
+		storagecfg.set(name + ".yaw", loc.getYaw());
+		storagecfg.set(name + ".pitch", loc.getPitch());
+
 		storagecfg.set(name + ".world", loc.getWorld().getUID().toString());
 		if(flag) {
 			savecfg();
@@ -96,7 +139,7 @@ public class ServerSettingStorageManager {
 	}
 	
 	public Location getLocation(String name) {
-		if ((name == null) || (name == "")) {
+		if (name == null || name.isEmpty()) {
 			return null;
 		}
 		String worldName = storagecfg.getString(name + ".world");
@@ -106,17 +149,18 @@ public class ServerSettingStorageManager {
 			return null;
 		}
 
-		Double x = storagecfg.getDouble(name + ".x");
-		Double y = storagecfg.getDouble(name + ".y");
-		Double z = storagecfg.getDouble(name + ".z");
-		Location loc = new Location(world, x, y, z);
-		
-		return loc;
+		double x = storagecfg.getDouble(name + ".x");
+		double y = storagecfg.getDouble(name + ".y");
+		double z = storagecfg.getDouble(name + ".z");
+		float yaw = (float)storagecfg.getDouble(name + "yaw");
+		float pitch = (float)storagecfg.getDouble(name + "pitch");
+
+		return new Location(world, x, y, z, yaw, pitch);
 	}
 	
-	public void getAllLocations(Set<Group> groups) {
+	public void getAllLocations(GroupManager groups) {
 		List<String> namesOnFile = storagecfg.getStringList("group.list");
-		for (Group group : groups) {
+		for (Group group : groups.getLoadedGroups()) {
 			String name = group.getName();
 			if (!namesOnFile.contains(name.toLowerCase())) {
 				continue;

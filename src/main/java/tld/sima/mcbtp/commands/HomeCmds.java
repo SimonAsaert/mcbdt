@@ -40,8 +40,7 @@ public class HomeCmds implements CommandExecutor{
 								player.sendMessage(ChatColor.RED + "Player " + ChatColor.DARK_RED + args[0] + ChatColor.RED + "not found!");
 								return false;
 							}else {
-								PlayerStorageManager psm = new PlayerStorageManager();
-								psm.setup(op.getUniqueId());
+								PlayerStorageManager psm = new PlayerStorageManager(op.getUniqueId());
 								HashMap<String, Location> loc = psm.getMap();
 								ArrayList<String> homeList = new ArrayList<String>(loc.keySet());
 								if (homeList.size() == 0) {
@@ -170,8 +169,7 @@ public class HomeCmds implements CommandExecutor{
 								player.sendMessage(ChatColor.RED + "Player " + ChatColor.DARK_RED + args[0] + ChatColor.RED + "not found!");
 								return true;
 							}else {
-								PlayerStorageManager psm = new PlayerStorageManager();
-								psm.setup(op.getUniqueId());
+								PlayerStorageManager psm = new PlayerStorageManager(op.getUniqueId());
 								HashMap<String, Location> loc = psm.getMap();
 								if (loc.containsKey(args[1])){
 									player.sendMessage(ChatColor.GOLD + "Teleporting you to " + ChatColor.WHITE + args[1]);

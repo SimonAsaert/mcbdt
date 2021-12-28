@@ -1,10 +1,43 @@
 name: MCBDuctTape
 main: tld.sima.mcbtp.Main
 version: 0.10.1
+api-version: 1.18
 author: Simon A
 description: A plugin that acts as a replacement for essentials for MCB.
+softdepend:
+  - LuckPerms
 
 commands:
+  GameMode:
+    description: Changes gamemode
+    usage: /gamemode
+    permission: mcdt.admin.gamemode
+    permission-message: You don't have the mcdt.gamemode permission.
+  gm:
+    description: Changes gamemode
+    usage: /gm
+    permission: mcdt.admin.gamemode
+    permission-message: You don't have the mcdt.gamemode permission.
+  gmc:
+    description: Changes gamemode
+    usage: /gmc
+    permission: mcdt.admin.gamemode
+    permission-message: You don't have the mcdt.gamemode permission.
+  gma:
+    description: Changes gamemode
+    usage: /gma
+    permission: mcdt.admin.gamemode
+    permission-message: You don't have the mcdt.gamemode permission.
+  gms:
+    description: Changes gamemode
+    usage: /gms
+    permission: mcdt.admin.gamemode
+    permission-message: You don't have the mcdt.gamemode permission.
+  gmsp:
+    description: Changes gamemode
+    usage: /gmsp
+    permission: mcdt.admin.gamemode
+    permission-message: You don't have the mcdt.gamemode permission.
   spawn:
     description: Teleports user to spawn
     usage: /spawn
@@ -83,6 +116,7 @@ commands:
   invsee:
     description: See user's inventory
     usage: /invsee <Player>
+    aliases: oi
     permission: mcdt.invsee
     permission-message: You don't have the mcdt.invsee permission.
   endersee:
@@ -110,9 +144,9 @@ commands:
     usage: /kill <username>
     permission: mcdt.kill
     permission-message: You don't have the mcdt.kill permission.
-  fly:
+  mcbfly:
     description: Toggles flight for defined user
-    usage: /fly <username>
+    usage: /mcbfly <username>
     permission: mcdt.fly
     permission-message: You don't have the mcdt.fly permission.
   feed:
@@ -150,8 +184,20 @@ commands:
     usage: /pvp
     permission: mcdt.pvp
     permission-message: You don't have the mcdt.pvp permission.
-    
+  setjoinmsg:
+    usage: /setjoinmsg <name> <msg>
+    permission: mcdt.editlogmsg
+    permission-message: You don't have the mcdt.editlogmsg permission.
+  setleavemsg:
+    usage: /setleavemsg <name> <msg>
+    permission: mcdt.editlogmsg
+    permission-message: You don't have the mcdt.editlogmsg permission.
+
 permissions:
+  gamemodeother:
+    description: Allows user to see break blocks
+    permission: mcdt.admin.gamemode.other
+    permission-message: You don't have the modifyworld permission.
   modifyworld:
     description: Allows user to see break blocks
     permission: modifyworld
@@ -175,4 +221,6 @@ permissions:
   homenumb:
     description: Set number of homes users can have (Default 3)
     permission: mcdt.homenumb.*
- 
+  custommsg:
+   description: Allows user to use their custom msg
+   permission: mcdt.custommsg

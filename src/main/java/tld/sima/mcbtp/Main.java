@@ -6,17 +6,19 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.GroupManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.lucko.luckperms.api.Group;
-import me.lucko.luckperms.api.LuckPermsApi;
 import net.md_5.bungee.api.ChatColor;
+import tld.sima.mcbtp.commands.AdminCmds;
 import tld.sima.mcbtp.commands.HomeCmds;
 import tld.sima.mcbtp.commands.InventoryCmds;
 import tld.sima.mcbtp.commands.MessageCmds;
@@ -28,34 +30,45 @@ import tld.sima.mcbtp.files.ServerSettingStorageManager;
 
 public class Main extends JavaPlugin {
 	
-	private HashMap<UUID, Location> locBackUUID = new HashMap<UUID, Location>();
-	private HashMap<UUID, HashMap<String, Location>> homeMap = new HashMap<UUID, HashMap<String, Location>>();
-	private HashMap<UUID, Location> tempLocationUUIDMap = new HashMap<UUID, Location>();
-	private HashMap<UUID, UUID> tpaRequest = new HashMap<UUID, UUID> ();
-	private HashMap<String, Location> spawnLoc = new HashMap<String, Location>();
-	private Set<UUID> adminChat = new HashSet<UUID>();
-	private Set<UUID> godmode = new HashSet<UUID>();
-	private Set<UUID> pvpflag = new HashSet<UUID>();
-	public HashMap<UUID, BukkitTask> pvptask = new HashMap<UUID, BukkitTask>();
-	public LuckPermsApi api = null;
+	private final HashMap<UUID, Location> locBackUUID = new HashMap<UUID, Location>();
+	private final HashMap<UUID, HashMap<String, Location>> homeMap = new HashMap<UUID, HashMap<String, Location>>();
+	private final HashMap<UUID, Location> tempLocationUUIDMap = new HashMap<UUID, Location>();
+	private final HashMap<UUID, UUID> tpaRequest = new HashMap<UUID, UUID> ();
+	private final HashMap<String, Location> spawnLoc = new HashMap<String, Location>();
+	private final Set<UUID> adminChat = new HashSet<UUID>();
+	private final Set<UUID> godmode = new HashSet<UUID>();
+	private final Set<UUID> pvpflag = new HashSet<UUID>();
+	private LoginLogoutMsg loginLogoutMsg;
+	public final HashMap<UUID, BukkitTask> pvptask = new HashMap<UUID, BukkitTask>();
+	public LuckPerms api = null;
 
 	@Override
 	public void onEnable() {
 		
-		SpawnCmds spawncmd = new SpawnCmds();
-		this.getCommand(spawncmd.cmd1).setExecutor(spawncmd);
-		this.getCommand(spawncmd.cmd2).setExecutor(spawncmd);
-		this.getCommand(spawncmd.cmd3).setExecutor(spawncmd);
-		this.getCommand(spawncmd.cmd4).setExecutor(spawncmd);
+		AdminCmds adminCMD = new AdminCmds();
+		this.getCommand(adminCMD.cmd1).setExecutor(adminCMD);
+		this.getCommand(adminCMD.cmd2).setExecutor(adminCMD);
+		this.getCommand(adminCMD.cmd3).setExecutor(adminCMD);
+		this.getCommand(adminCMD.cmd4).setExecutor(adminCMD);
+		this.getCommand(adminCMD.cmd5).setExecutor(adminCMD);
+		this.getCommand(adminCMD.cmd6).setExecutor(adminCMD);
 		
-		MessageCmds msgcmd = new MessageCmds();
-		this.getCommand(msgcmd.cmd1).setExecutor(msgcmd);
-		this.getCommand(msgcmd.cmd2).setExecutor(msgcmd);
-		this.getCommand(msgcmd.cmd3).setExecutor(msgcmd);
-		this.getCommand(msgcmd.cmd4).setExecutor(msgcmd);
-		this.getCommand(msgcmd.cmd5).setExecutor(msgcmd);
-		this.getCommand(msgcmd.cmd6).setExecutor(msgcmd);
-		this.getCommand(msgcmd.cmd7).setExecutor(msgcmd);
+		SpawnCmds spawnCMD = new SpawnCmds();
+		this.getCommand(spawnCMD.spawnCmd).setExecutor(spawnCMD);
+		this.getCommand(spawnCMD.setSpawnCmd).setExecutor(spawnCMD);
+		this.getCommand(spawnCMD.mcbConfirmCmd).setExecutor(spawnCMD);
+		this.getCommand(spawnCMD.delSpawnCmd).setExecutor(spawnCMD);
+		
+		MessageCmds msgCMD = new MessageCmds();
+		this.getCommand(msgCMD.cmd1).setExecutor(msgCMD);
+		this.getCommand(msgCMD.cmd2).setExecutor(msgCMD);
+		this.getCommand(msgCMD.cmd3).setExecutor(msgCMD);
+		this.getCommand(msgCMD.cmd4).setExecutor(msgCMD);
+		this.getCommand(msgCMD.cmd5).setExecutor(msgCMD);
+		this.getCommand(msgCMD.cmd6).setExecutor(msgCMD);
+		this.getCommand(msgCMD.cmd7).setExecutor(msgCMD);
+		this.getCommand(msgCMD.setJoinMsg).setExecutor(msgCMD);
+		this.getCommand(msgCMD.setLeaveMsg).setExecutor(msgCMD);
 		
 		HomeCmds homecmd = new HomeCmds();
 		this.getCommand(homecmd.cmd1).setExecutor(homecmd);
@@ -66,14 +79,15 @@ public class Main extends JavaPlugin {
 		InventoryCmds invcmd = new InventoryCmds();
 		this.getCommand(invcmd.cmd1).setExecutor(invcmd);
 		this.getCommand(invcmd.cmd2).setExecutor(invcmd);
+		this.getCommand(invcmd.cmd3).setExecutor(invcmd);
 		
 		TeleportCmds tpcmd = new TeleportCmds();
-		this.getCommand(tpcmd.cmd1).setExecutor(tpcmd);
-		this.getCommand(tpcmd.cmd2).setExecutor(tpcmd);
-		this.getCommand(tpcmd.cmd3).setExecutor(tpcmd);
-		this.getCommand(tpcmd.cmd4).setExecutor(tpcmd);
-		this.getCommand(tpcmd.cmd5).setExecutor(tpcmd);
-		this.getCommand(tpcmd.cmd6).setExecutor(tpcmd);
+		this.getCommand(tpcmd.tppos).setExecutor(tpcmd);
+		this.getCommand(tpcmd.getpos).setExecutor(tpcmd);
+		this.getCommand(tpcmd.tpa).setExecutor(tpcmd);
+		this.getCommand(tpcmd.tpaccept).setExecutor(tpcmd);
+		this.getCommand(tpcmd.tpdeny).setExecutor(tpcmd);
+		this.getCommand(tpcmd.tpall).setExecutor(tpcmd);
 		
 		PlayerCmds playercmd = new PlayerCmds();
 		this.getCommand(playercmd.cmd1).setExecutor(playercmd);
@@ -86,28 +100,32 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new EventManager(), this);
 		
 		getHomes();
-		
-		RegisteredServiceProvider<LuckPermsApi> provider = Bukkit.getServicesManager().getRegistration(LuckPermsApi.class);
-		if (provider != null) {
-		    api = provider.getProvider();
-		    
-		    Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "LuckyPerms found!");
-		    Set<Group> groups = api.getGroups();
-		    ServerSettingStorageManager sssm = new ServerSettingStorageManager();
-		    sssm.setup();
-		    sssm.getAllLocations(groups);
-		    
-		    if (!spawnLoc.containsKey("default")) {
-		    	Location loc = Bukkit.getWorlds().get(0).getSpawnLocation();
-		    	spawnLoc.put("default", loc);
-		    }
+
+		ServerSettingStorageManager sssm = new ServerSettingStorageManager();
+		sssm.setup();
+
+		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+			RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+			if (provider != null) {
+			    api = LuckPermsProvider.get();
+			    
+			    Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "LuckPerms found!");
+			    GroupManager groups = api.getGroupManager();
+			    sssm.getAllLocations(groups);
+			    
+			    if (!spawnLoc.containsKey("default")) {
+			    	Location loc = Bukkit.getWorlds().get(0).getSpawnLocation();
+			    	spawnLoc.put("default", loc);
+			    }
+			}
 		}
+
+		this.loginLogoutMsg = new LoginLogoutMsg(sssm.getDefaultLoginMsg(), sssm.getDefaultLogoutMsg(), sssm.getLoginPrefixMsg(), sssm.getLogoutPrefixMsg());
 		
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			if (player.hasPermission("mcdt.adminchat") || player.isOp()) {
 				this.getAdminChatMap().add(player.getUniqueId());
 			}
-			player.getStatistic(Statistic.PLAY_ONE_TICK);
 		}
 		
 		this.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "MCBDT Enabled");
@@ -117,8 +135,7 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
 		for (Player player : players) {
-			PlayerStorageManager smgr = new PlayerStorageManager();
-			smgr.setup(player);
+			PlayerStorageManager smgr = new PlayerStorageManager(player);
 			smgr.finalSave(homeMap.get(player.getUniqueId()));
 			smgr.savePVPflag(pvpflag.contains(player.getUniqueId()));
 		}
@@ -138,14 +155,17 @@ public class Main extends JavaPlugin {
 	private void getHomes() {
 		Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
 		for (Player player : players) {
-			PlayerStorageManager smgr = new PlayerStorageManager();
-			smgr.setup(player);
+			PlayerStorageManager smgr = new PlayerStorageManager(player);
 			HashMap<String, Location> locMap = smgr.getMap();
 			this.homeMap.put(player.getUniqueId(), locMap);
 			if(smgr.getPVPflag()) {
 				pvpflag.add(player.getUniqueId());
 			}
 		}
+	}
+
+	public LoginLogoutMsg getLoginLogoutMsg(){
+		return loginLogoutMsg;
 	}
 	
 	public Set<UUID> getPVPSet(){
