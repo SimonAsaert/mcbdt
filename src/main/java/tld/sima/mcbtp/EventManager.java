@@ -18,12 +18,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import net.md_5.bungee.api.ChatColor;
@@ -99,11 +94,16 @@ public class EventManager implements Listener {
 		if (player.hasPermission("mcdt.adminchat") || player.isOp()) {
 			plugin.getAdminChatMap().add(player.getUniqueId());
 		}
+	}
 
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e){
+		Player player = e.getPlayer();
+		PlayerStorageManager smgr = new PlayerStorageManager(player);
 		if((player.hasPermission("mcdt.custommsg") || player.isOp()) && !smgr.getLoginMsg(player).isEmpty()){
-			plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLoginLogoutMsg().getLoginPrefix() + smgr.getLoginMsg(player)));
+			e.setJoinMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLoginLogoutMsg().getLoginPrefix() + smgr.getLoginMsg(player)));
 		}else{
-			plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLoginLogoutMsg().getLoginPrefix() + plugin.getLoginLogoutMsg().getLoginMsg(player)));
+			e.setJoinMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLoginLogoutMsg().getLoginPrefix() + plugin.getLoginLogoutMsg().getLoginMsg(player)));
 		}
 	}
 	
@@ -113,9 +113,9 @@ public class EventManager implements Listener {
 		PlayerStorageManager smgr = new PlayerStorageManager(player);
 		smgr.finalSave(plugin.getHomeMap().get(player.getUniqueId()));
 		if((player.hasPermission("mcdt.custommsg") || player.isOp()) && !smgr.getLogoutMsg(player).isEmpty()){
-			plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLoginLogoutMsg().getLogoutPrefix() + smgr.getLogoutMsg(player)));
+			event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLoginLogoutMsg().getLogoutPrefix() + smgr.getLogoutMsg(player)));
 		}else{
-			plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLoginLogoutMsg().getLogoutPrefix() + plugin.getLoginLogoutMsg().getLogoutMsg(player)));
+			event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLoginLogoutMsg().getLogoutPrefix() + plugin.getLoginLogoutMsg().getLogoutMsg(player)));
 		}
 	}
 	
